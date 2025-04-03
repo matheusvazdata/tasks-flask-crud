@@ -39,5 +39,25 @@ def get_task(task_id):
         
     return jsonify({'message': 'Tarefa não encontrada!'}), 404
 
+@app.route('/tasks/<int:task_id>', methods=['PUT'])
+def update_task(task_id):
+    task = None
+    for t in tasks:
+        if t.id == task_id:
+            task = t
+    print(task)
+    if task is None:
+        return jsonify({'message': 'Tarefa não encontrada!'}), 404
+    
+    data = request.get_json()
+    task.title = data.get('title', task.title)
+    task.description = data.get('description', task.description)
+    task.completed = data.get('completed', task.completed)
+    print(task)
+
+    return jsonify({
+        'message': 'Tarefa atualizada com sucesso!'
+    })
+
 if __name__ == '__main__': 
     app.run(debug=True)
